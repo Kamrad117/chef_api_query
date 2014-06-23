@@ -15,6 +15,12 @@ gem 'devise'
 gem 'simple_form'
 gem 'therubyracer', :platform=>:ruby
 gem 'thin'
+gem 'chef'
+gem 'thread'
+gem 'parallel'
+gem 'net-ssh'
+gem 'net-scp'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_20]
@@ -27,6 +33,7 @@ group :development do
   gem 'rb-fchange', :require=>false
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
+  gem 'pry-rails'
 end
 group :development, :test do
   gem 'factory_girl_rails'

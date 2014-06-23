@@ -1,1 +1,146 @@
-<h3>Home</h3>
+<!--Start Breadcrumb-->
+<div class="row">
+  <div id="breadcrumb" class="col-xs-12">
+    <ol class="breadcrumb">
+      <li><%= link_to 'Home', root_path %></li>
+      <li>Chef API Query</li>
+    </ol>
+  </div>
+</div>
+<!--End Breadcrumb-->
+<!--Start Dashboard 1-->
+<div id="dashboard-header" class="row">
+  <div class="col-xs-10 col-sm-2">
+    <h3><%= @data.env %> dashboard</h3>
+  </div>
+</div>
+
+<!--End Dashboard 1-->
+<!--Start Dashboard 2-->
+
+<div class="row-fluid">
+  <div id="dashboard_links" class="col-xs-12 col-sm-2 pull-right">
+    <ul class="nav nav-pills nav-stacked" data-no-turbolinks>
+      <li class="active"><a href="#" class="tab-link" id="overview">Nodes</a></li>
+      <li><a href="#" class="tab-link" id="clients">Nodes without role</a></li>
+      <li><a href="#" class="tab-link" id="graph">Nodes without env</a></li>
+    </ul>
+  </div>
+  <div id="dashboard_tabs" class="col-xs-12 col-sm-10">
+    <!--Start Dashboard Tab 1-->
+    <div id="dashboard-overview" class="row" style="visibility: visible; position: relative;">
+      <div id="ow-marketplace" class="col-sm-12 col-md-6">
+        <div id="ow-setting">
+            <%= link_to chef_csv_path, data: { no_turbolink: true } do %>
+              <i class="fa fa-download"></i>
+            <% end %>
+        </div>
+        <h4 class="page-header">SUMMARY</h4>
+        <table id="ticker-table" class="table m-table table-bordered table-hover table-heading">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Fqdn</th>
+              <th>Ip</th>
+              <th>Cluster name</th>
+              <th>Shard name</th>
+              <th>Component to balance</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% @data.nodes_by_role.each_pair do |k,v| %>
+            <tr>
+              <td class="m-ticker"><b><%= k.to_s %></b> </td>
+              <td class="m-ticker"> </td>
+              <td class="m-ticker"> </td>
+              <td class="m-ticker"> </td>
+              <td class="m-ticker"> </td>
+              <td class="m-ticker"> </td>
+            </tr>
+            <% v.each do |node| %>
+            <tr>
+              <td class="m-ticker"> </td>
+              <td class="m-ticker"><%= node.hostname %></td>
+              <td class="m-ticker"><%= node.ip %></td>
+              <td class="m-ticker"><%= node.cluster_name %></td>
+              <td class="m-ticker"><%= node.shard_name %></td>
+              <td class="m-ticker"><%= node.balance_component %></td>
+              </tr>
+            <% end %>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!--End Dashboard Tab 1-->
+    <!--Start Dashboard Tab 2-->
+
+    <div id="dashboard-clients" class="row" style="visibility: hidden; position: absolute;">
+      <div class="col-sm-12 col-md-6">
+        <h4 class="page-header">Nodes without role</h4>
+        <table id="ticker-table" class="table m-table table-bordered table-hover table-heading">
+          <thead>
+            <tr>
+              <th>Fqdn</th>
+              <th>Ip</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% @data.nodes_without_role.each do |node| %>
+            <tr>
+              <td class="m-ticker"><%= node.hostname %></td>
+              <td class="m-ticker"><%= node.ip %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+      <!--End Dashboard Tab 2-->
+      <!--Start Dashboard Tab 3-->
+      <div id="dashboard-graph" class="row" style="visibility: hidden; position: absolute;" >
+        <div class="col-sm-12 col-md-6">
+          <h4 class="page-header">Nodes without env</h4>
+          <table id="ticker-table" class="table m-table table-bordered table-hover table-heading">
+            <thead>
+              <tr>
+                <th>Fqdn</th>
+                <th>Ip</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @data.nodes_without_env.each do |node| %>
+                <tr>
+                  <td class="m-ticker"><%= node.hostname %></td>
+                  <td class="m-ticker"><%= node.ip %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          </div>
+      </div>
+    <!--End Dashboard Tab 3-->
+  </div>
+  <div class="clearfix"></div>
+</div>
+<!--End Dashboard 2 -->
+<div style="height: 40px;"></div>
+<script type="text/javascript">
+// Array for random data for Sparkline
+var sparkline_arr_1 = SparklineTestData();
+var sparkline_arr_2 = SparklineTestData();
+var sparkline_arr_3 = SparklineTestData();
+$(document).ready(function() {
+  // Make all JS-activity for dashboard
+  DashboardTabChecker();
+  // Load Knob plugin and run callback for draw Knob charts for dashboard(tab-servers)
+  LoadKnobScripts(DrawKnobDashboard);
+  // Load Sparkline plugin and run callback for draw Sparkline charts for dashboard(top of dashboard + plot in tables)
+  LoadSparkLineScript(DrawSparklineDashboard);
+  // Load Morris plugin and run callback for draw Morris charts for dashboard
+  LoadMorrisScripts(MorrisDashboard);
+  // Make beauty hover in table
+  $("#ticker-table").beautyHover();
+});
+</script>

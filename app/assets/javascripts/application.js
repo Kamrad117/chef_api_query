@@ -15,3 +15,10 @@
 //= require turbolinks
 //= require bootstrap
 //= require_tree .
+
+$(document).on('page:fetch', function() {
+  $('.preloader').show();
+});
+$(document).on('page:change', function() {
+  $('.preloader').hide();
+});

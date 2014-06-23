@@ -4,17 +4,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= content_for?(:title) ? yield(:title) : "Chef Api Query" %></title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Chef Api Query" %>">
+
+      <meta charset="utf-8">
+      <title>cheF API Query</title>
+      <meta name="description" content="description">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" data-turbolinks-track>
+      <link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'data-turbolinks-track>
+      <link href="plugins/fancybox/jquery.fancybox.css" rel="stylesheet" data-turbolinks-track>
+      <link href="plugins/fullcalendar/fullcalendar.css" rel="stylesheet" data-turbolinks-track>
+      <link href="plugins/xcharts/xcharts.min.css" rel="stylesheet" data-turbolinks-track>
+      <link href="plugins/select2/select2.css" rel="stylesheet" data-turbolinks-track>
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
+          <script src="http://getbootstrap.com/docs-assets/js/html5shiv.js"></script>
+          <script src="http://getbootstrap.com/docs-assets/js/respond.min.js"></script>
+      <![endif]-->
+
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
   </head>
-  <body>
+ <!--  <body>
     <header>
-      <%= render 'layouts/navigation' %>
     </header>
     <main role="main">
-       <%= render 'layouts/messages' %>
-       <%= yield %>
     </main>
   </body>
-</html>
+</html> -->
+
+<body>
+<!--Start Header-->
+<div id="screensaver">
+  <canvas id="canvas"></canvas>
+  <i class="fa fa-lock" id="screen_unlock"></i>
+</div>
+<div id="modalbox">
+  <div class="devoops-modal">
+    <div class="devoops-modal-header">
+      <div class="modal-header-name">
+        <span>Basic table</span>
+      </div>
+      <div class="box-icons">
+        <a class="close-link">
+          <i class="fa fa-times"></i>
+        </a>
+      </div>
+    </div>
+    <div class="devoops-modal-inner">
+    </div>
+    <div class="devoops-modal-bottom">
+    </div>
+  </div>
+</div>
+<header class="navbar">
+  <div class="container-fluid expanded-panel">
+    <div class="row">
+      <div id="logo" class="col-xs-12 col-sm-2">
+        <%= link_to 'Chef API Query', root_path %>
+      </div>
+      <div id="top-panel" class="col-xs-12 col-sm-10">
+        <div class="row">
+          <div class="col-xs-8 col-sm-4" data-no-turbolink>
+            <a href="#" class="show-sidebar">
+              <i class="fa fa-bars"></i>
+            </a>
+            <div id="search">
+              <input type="text" placeholder="search"/>
+              <i class="fa fa-search"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!--End Header-->
+<!--Start Container-->
+<div id="main" class="container-fluid">
+  <div class="row">
+    <div id="sidebar-left" class="col-xs-2 col-sm-2">
+      <ul class="nav main-menu">
+        <li>
+          <%= link_to root_path do %>
+            <i class="fa fa-dashboard"></i>
+            <span class="hidden-xs">Dashboard</span>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+    <!--Start Content-->
+    <div id="content" class="col-xs-12 col-sm-10">
+      <div class="preloader">
+        <img src="img/devoops_getdata.gif" class="devoops-getdata" alt="preloader"/>
+      </div>
+      <%= yield %>
+    </div>
+    <!--End Content-->
+  </div>
+</div>
+<!--End Container-->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<!--<script src="http://code.jquery.com/jquery.js"></script>-->
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="plugins/justified-gallery/jquery.justifiedgallery.min.js"></script>
+<script src="plugins/tinymce/tinymce.min.js"></script>
+<script src="plugins/tinymce/jquery.tinymce.min.js"></script>
+<!-- All functions for this theme + document.ready processing -->
+</body>

@@ -1,0 +1,2 @@
+rvm --create use 2.0.0@chefapi
+
