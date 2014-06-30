@@ -44,13 +44,17 @@
               <th>Ip</th>
               <th>Cluster name</th>
               <th>Shard name</th>
+              <th>Priority </th>
               <th>Component to balance</th>
+              <th>Balanced FQDNs</th>
             </tr>
           </thead>
           <tbody>
-          <% @data.nodes_by_role.each_pair do |k,v| %>
+          <% @data.nodes_by_role.sort.map do |k,v| %>
             <tr>
               <td class="m-ticker"><b><%= k.to_s %></b> </td>
+              <td class="m-ticker"> </td>
+              <td class="m-ticker"> </td>
               <td class="m-ticker"> </td>
               <td class="m-ticker"> </td>
               <td class="m-ticker"> </td>
@@ -64,7 +68,9 @@
               <td class="m-ticker"><%= node.ip %></td>
               <td class="m-ticker"><%= node.cluster_name %></td>
               <td class="m-ticker"><%= node.shard_name %></td>
+              <td class="m-ticker"><%= node.priority %></td>
               <td class="m-ticker"><%= node.balance_component %></td>
+              <td class="m-ticker"><%= node.balance_fqdns %></td>
               </tr>
             <% end %>
           <% end %>

@@ -10,14 +10,14 @@ class HomeController < ApplicationController
     @@data ||= get_data       
     csv_string = CSV.generate do |csv|
       csv << [
-              'Role', 'Fqdn', 'Ip', 'Cluster_name', 
-              'Shard_name', 'Component_to_balance'
+              'Role', 'Fqdn', 'Ip', 'Cluster name', 'Shard name',
+              'Priority', 'Component to balance', 'Balanced FQDNs'
              ]
       @@data.nodes_by_role.each do |role,nodes|
         nodes.each do |node|
           csv << [
                   role, node.hostname, node.ip, node.cluster_name, 
-                  node.shard_name, node.balance_component
+                  node.shard_name, node.balance_component, node.balanced_fqdns
                  ]
         end
       end

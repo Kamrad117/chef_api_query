@@ -20,9 +20,9 @@ gem 'thread'
 gem 'parallel'
 gem 'net-ssh'
 gem 'net-scp'
+gem 'mongo'
 
 group :development do
-  gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_20]
   gem 'guard-bundler'
   gem 'guard-rails'
