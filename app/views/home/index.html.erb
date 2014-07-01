@@ -51,19 +51,9 @@
           </thead>
           <tbody>
           <% @data.nodes_by_role.sort.map do |k,v| %>
-            <tr>
-              <td class="m-ticker"><b><%= k.to_s %></b> </td>
-              <td class="m-ticker"> </td>
-              <td class="m-ticker"> </td>
-              <td class="m-ticker"> </td>
-              <td class="m-ticker"> </td>
-              <td class="m-ticker"> </td>
-              <td class="m-ticker"> </td>
-              <td class="m-ticker"> </td>
-            </tr>
             <% v.each do |node| %>
             <tr>
-              <td class="m-ticker"> </td>
+              <td class="m-ticker"><%= k.to_s %> </td>
               <td class="m-ticker"><%= node.hostname %></td>
               <td class="m-ticker"><%= node.ip %></td>
               <td class="m-ticker"><%= node.cluster_name %></td>

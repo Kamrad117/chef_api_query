@@ -5,6 +5,9 @@ class HomeController < ApplicationController
 
   def index 
   end 
+  
+  def error
+  end 
 
   def export_to_csv 
     @@data ||= get_data       
@@ -13,7 +16,7 @@ class HomeController < ApplicationController
               'Role', 'Fqdn', 'Ip', 'Cluster name', 'Shard name',
               'Priority', 'Component to balance', 'Balanced FQDNs'
              ]
-      @@data.nodes_by_role.each do |role,nodes|
+      @@data.nodes_by_role.sort.map do |role,nodes|
         nodes.each do |node|
           csv << [
                   role, node.hostname, node.ip, node.cluster_name, 

@@ -5,6 +5,7 @@ require 'net/ssh'
 require 'net/scp'
 require 'yaml'
 require 'mongo'
+require 'pry-rails'
 
 class EndPoint
   attr_accessor :env, :nodes_by_role, :nodes_without_role, :nodes_without_env
@@ -21,53 +22,41 @@ class EndPoint
     node = OpenStruct.new( {
       hostname:           node_hash.deep_find(:fqdn),
       chef_env:           node_hash.deep_find(:chef_environment),
-      os:                 node_hash.deep_find(:os),
       roles:              node_hash.deep_find(:roles),
       ip:                 node_hash.deep_find(:ipaddress),
-      filesystem:         node_hash.deep_find(:filesystem),
     } )
 
-    if node.roles && node.roles.any? && node.roles.any? { |r| r.include?('rms_ha') }
-      node.balance_component = node_hash.attribute.haproxy.component_to_balance
-    end
-
-    node = set_mongo_attributes(node, node_hash)
-    node
+    set_ha_proxy_attributes(node, node_hash)
+    set_mongo_attributes(node, node_hash)
   end
 
   def get_topology 
     nodes = @connection.get_rest('nodes/')
-
-    begin
-      p "======================================================"
-      Parallel.each(nodes.keys, in_threads: 40)  do |node_name|
+    Parallel.each(nodes.keys, in_threads: 30)  do |node_name|
       node = create_node(node_name)
-        if [nil, '', [], [''], [nil]].include?(node.roles) 
-          @nodes_without_role << node 
-        elsif node.chef_env == nil 
-          @nodes_without_env << node        
-        elsif node.chef_env.include?(@env)
-          node.roles.each do |role|
-            add_node(node, role) if role.include?("rms_")
-          end
+      if [nil, '', [], [''], [nil]].include?(node.roles) 
+        @nodes_without_role << node 
+      elsif node.chef_env == nil 
+        @nodes_without_env << node        
+      elsif node.chef_env.include?(@env)
+        node.roles.each do |role|
+          add_node(node, role) if role.include?("rms_")
         end
       end
-    rescue StandardError => e
-      e.message 
-      puts e.class
     end
     set_balanced_fqdns
   end
 
   def add_node(node, role)
-    p node.hostname 
     if @nodes_by_role.keys.include?(role)
-      @nodes_by_role[role].each do |old_node|
-        if nodes_similar?(old_node, node)
-          old_node = merge_nodes(old_node, node)
-        else 
-          @nodes_by_role[role] << node
-        end
+      similar_node = @nodes_by_role[role].detect do 
+        |old_node| nodes_similar?(old_node, node) 
+      end
+
+      if similar_node 
+        merge_nodes(similar_node, node)
+      else 
+        @nodes_by_role[role] << node
       end
     else 
       @nodes_by_role[role] = [node]
@@ -79,13 +68,19 @@ class EndPoint
     old_node.balance_fqdns == node.balance_fqdns &&
     old_node.cluster_name == node.cluster_name &&
     old_node.shard_name == node.shard_name && 
-    old_node.priority == node.priority &&
-    old_node.hostname != node.hostname
+    old_node.priority == node.priority
   end
 
   def merge_nodes(old_node, node)
     old_node.hostname += " #{node.hostname}"
     old_node.ip += " #{node.ip}"
+  end
+  
+  def set_ha_proxy_attributes(node, node_hash)
+    if node.roles && node.roles.any? && node.roles.any? { |r| r.include?('rms_ha') }
+      node.balance_component = node_hash.attribute.haproxy.component_to_balance
+    end
+    node
   end
 
   def set_balanced_fqdns 
